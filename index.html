@@ -11,6 +11,7 @@
 
 <body>
     <div class="loading">
+        <div class="particles-container" id="particles"></div>
         <div class="greet-container">
             <div class="greet" id="greet1">
                 <h2>You stand before the blood of the dragon—be honored and speak true.</h2>
@@ -48,35 +49,107 @@
 
     <div class="carousel">
         <div class="group">
-            <div class="card"><img src="lopp/war1.webp" alt="war1"></div>
-            <div class="card"><img src="lopp/war2.avif" alt="war2"></div>
-            <div class="card"><img src="lopp/war3.webp" alt="war3"></div>
-            <div class="card"><img src="lopp/war4.webp" alt="war4"></div>
-            <div class="card"><img src="lopp/war5.jpg" alt="war5"></div>
-            <div class="card"><img src="lopp/war6.avif" alt="war6"></div>
-            <div class="card"><img src="lopp/war7.jpg" alt="war7"></div>
-            <div class="card"><img src="lopp/war8.jpg" alt="war8"></div>
-            <div class="card"><img src="lopp/war9.jpg" alt="war9"></div>
-            <div class="card"><img src="lopp/war10.webp" alt="war10"></div>
-            <div class="card"><img src="lopp/war11.avif" alt="war11"></div>
-            <div class="card"><img src="lopp/war12.jpg" alt="war12"></div>
+            <div class="card" data-title="The War Begins">
+                <img src="lopp/war1.webp" alt="war1">
+                <div class="card-overlay">The War Begins</div>
+            </div>
+            <div class="card" data-title="Dragons Soar">
+                <img src="lopp/war2.avif" alt="war2">
+                <div class="card-overlay">Dragons Soar</div>
+            </div>
+            <div class="card" data-title="Battle Lines">
+                <img src="lopp/war3.webp" alt="war3">
+                <div class="card-overlay">Battle Lines</div>
+            </div>
+            <div class="card" data-title="Fire & Blood">
+                <img src="lopp/war4.webp" alt="war4">
+                <div class="card-overlay">Fire & Blood</div>
+            </div>
+            <div class="card" data-title="Crown Ablaze">
+                <img src="lopp/war5.jpg" alt="war5">
+                <div class="card-overlay">Crown Ablaze</div>
+            </div>
+            <div class="card" data-title="Dragon's Fury">
+                <img src="lopp/war6.avif" alt="war6">
+                <div class="card-overlay">Dragon's Fury</div>
+            </div>
+            <div class="card" data-title="Iron Throne">
+                <img src="lopp/war7.jpg" alt="war7">
+                <div class="card-overlay">Iron Throne</div>
+            </div>
+            <div class="card" data-title="War Council">
+                <img src="lopp/war8.jpg" alt="war8">
+                <div class="card-overlay">War Council</div>
+            </div>
+            <div class="card" data-title="Siege Lines">
+                <img src="lopp/war9.jpg" alt="war9">
+                <div class="card-overlay">Siege Lines</div>
+            </div>
+            <div class="card" data-title="Dragon Riders">
+                <img src="lopp/war10.webp" alt="war10">
+                <div class="card-overlay">Dragon Riders</div>
+            </div>
+            <div class="card" data-title="Final Stand">
+                <img src="lopp/war11.avif" alt="war11">
+                <div class="card-overlay">Final Stand</div>
+            </div>
+            <div class="card" data-title="Aftermath">
+                <img src="lopp/war12.jpg" alt="war12">
+                <div class="card-overlay">Aftermath</div>
+            </div>
         </div>
     </div>
 
     <div class="carousel">
         <div class="group">
-            <div class="card"><img src="lopp/war13.webp" alt="war13"></div>
-            <div class="card"><img src="lopp/war14.jpg" alt="war14"></div>
-            <div class="card"><img src="lopp/war15.avif" alt="war15"></div>
-            <div class="card"><img src="lopp/war16.jpg" alt="war16"></div>
-            <div class="card"><img src="lopp/war17.jpg" alt="war17"></div>
-            <div class="card"><img src="lopp/war18.jpg" alt="war18"></div>
-            <div class="card"><img src="lopp/war19.jpg" alt="war19"></div>
-            <div class="card"><img src="lopp/war20.jpg" alt="war20"></div>
-            <div class="card"><img src="lopp/war21.jpg" alt="war21"></div>
-            <div class="card"><img src="lopp/war22.jpg" alt="war22"></div>
-            <div class="card"><img src="lopp/war23.avif" alt="war23"></div>
-            <div class="card"><img src="lopp/war24.avif" alt="war24"></div>
+            <div class="card" data-title="Royal Procession">
+                <img src="lopp/war13.webp" alt="war13">
+                <div class="card-overlay">Royal Procession</div>
+            </div>
+            <div class="card" data-title="King's Landing">
+                <img src="lopp/war14.jpg" alt="war14">
+                <div class="card-overlay">King's Landing</div>
+            </div>
+            <div class="card" data-title="Northern Forces">
+                <img src="lopp/war15.avif" alt="war15">
+                <div class="card-overlay">Northern Forces</div>
+            </div>
+            <div class="card" data-title="Dragonstone">
+                <img src="lopp/war16.jpg" alt="war16">
+                <div class="card-overlay">Dragonstone</div>
+            </div>
+            <div class="card" data-title="Harrenhal">
+                <img src="lopp/war17.jpg" alt="war17">
+                <div class="card-overlay">Harrenhal</div>
+            </div>
+            <div class="card" data-title="The Reach">
+                <img src="lopp/war18.jpg" alt="war18">
+                <div class="card-overlay">The Reach</div>
+            </div>
+            <div class="card" data-title="Dorne Warriors">
+                <img src="lopp/war19.jpg" alt="war19">
+                <div class="card-overlay">Dorne Warriors</div>
+            </div>
+            <div class="card" data-title="Iron Fleet">
+                <img src="lopp/war20.jpg" alt="war20">
+                <div class="card-overlay">Iron Fleet</div>
+            </div>
+            <div class="card" data-title="The Wall">
+                <img src="lopp/war21.jpg" alt="war21">
+                <div class="card-overlay">The Wall</div>
+            </div>
+            <div class="card" data-title="Winterfell">
+                <img src="lopp/war22.jpg" alt="war22">
+                <div class="card-overlay">Winterfell</div>
+            </div>
+            <div class="card" data-title="The Crownlands">
+                <img src="lopp/war23.avif" alt="war23">
+                <div class="card-overlay">The Crownlands</div>
+            </div>
+            <div class="card" data-title="Riverlands">
+                <img src="lopp/war24.avif" alt="war24">
+                <div class="card-overlay">Riverlands</div>
+            </div>
         </div>
     </div>
 
