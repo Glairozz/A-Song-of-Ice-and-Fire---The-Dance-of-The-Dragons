@@ -2,6 +2,10 @@
 
 A comprehensive fan website dedicated to the world of Westeros and Essos, covering both Game of Thrones and House of the Dragon series.
 
+## Overview
+
+This project is an interactive, fan-made website showcasing the rich lore of George R.R. Martin's universe. It features detailed information about characters, dragons, great houses, locations, organizations, and magical elements from the world of Ice and Fire.
+
 ## Features
 
 - **Interactive Navigation Bar**: Modern, responsive navigation with smooth hover effects
@@ -14,29 +18,65 @@ A comprehensive fan website dedicated to the world of Westeros and Essos, coveri
 - **Magical Elements**: Dragons, warging, greenseers, and other mystical elements
 - **Smooth Animations**: Enhanced UI with staggered reveals, hover effects, and smooth transitions
 - **Return to Top**: Quick navigation button on all pages
+- **Interactive Map**: Stunning map of Westeros and Essos
+- **Responsive Design**: Works on desktop and mobile devices
 
 ## Pages
 
-1. **Home (index.html)**: Landing page with war imagery carousel
-2. **Lobby (lobby.html)**: Welcome page with map and introduction
-3. **Great Houses (greathouses.html)**: All houses and their characters
-4. **Dragons (dragons.html)**: Dragon database from all eras
-5. **Races (races.html)**: Races and peoples of the world
-6. **Locations (locations.html)**: Major locations in Westeros and Essos
-7. **Organizations (organizations.html)**: Key organizations and orders
-8. **Magic (magic.html)**: Magical elements and artifacts
+| Page | Description |
+|------|-------------|
+| **Home (index.html)** | Landing page with war imagery carousel |
+| **Lobby (lobby.html)** | Welcome page with map and introduction |
+| **Great Houses (greathouses.html)** | All houses and their characters |
+| **Dragons (dragons.html)** | Dragon database from all eras |
+| **Races (races.html)** | Races and peoples of the world |
+| **Locations (locations.html)** | Major locations in Westeros and Essos |
+| **Organizations (organizations.html)** | Key organizations and orders |
+| **Magic (magic.html)** | Magical elements and artifacts |
 
 ## Technology
 
-- HTML5
-- CSS3 (with animations, gradients, and modern layouts)
-- JavaScript (vanilla JS for interactivity)
-- Google Fonts (Cinzel Decorative)
+- **HTML5**: Semantic markup
+- **CSS3**: Modern styling with animations, gradients, and flexbox/grid layouts
+- **JavaScript**: Vanilla JS for interactivity and dynamic content
+- **Google Fonts**: Cinzel Decorative for fantasy-themed typography
+- **Images**: WebP format for optimized loading
 
-## How to Run
+## Getting Started
 
-Simply open `index.html` in any modern web browser.
+1. Clone the repository
+2. Open `index.html` in any modern web browser
+3. Navigate through the different pages using the navigation bar
+
+## Project Structure
+
+```
+├── index.html          # Main landing page
+├── lobby.html         # Welcome/lobby page
+├── greathouses.html   # Great Houses of Westeros
+├── dragons.html       # Dragon database
+├── races.html         # Races and peoples
+├── locations.html     # Locations in the world
+├── organizations.html # Organizations and orders
+├── magic.html         # Magical elements
+├── styles.css         # Main stylesheet
+├── script.js          # JavaScript functionality
+├── map.webp           # World map image
+├── characters/        # Character images
+├── dragons/           # Dragon images
+├── dragons2/          # Additional dragon images
+├── dragons3/          # More dragon images
+├── housesimages/      # House images
+├── location/          # Location images
+├── lopp/              # Additional assets
+├── magic/             # Magic-related images
+└── org/               # Organization images
+```
 
 ## Credits
 
-This is a fan-made project for educational and entertainment purposes.
+This is a fan-made project for educational and entertainment purposes. All content belongs to George R.R. Martin, HBO, and their respective owners.
+
+---
+
+*"Winter is Coming"*
