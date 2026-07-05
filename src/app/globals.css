@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-gold-primary: #b86b00;
+  --color-gold-light: #d4820f;
+  --color-gold-dark: #8b4513;
+  --color-cream: #f5e1c0;
+  --color-brown-dark: #5c3a21;
+  --color-brown-light: #4a2f1a;
+
+  --font-cinzel: var(--font-cinzel);
+  --font-sans: var(--font-cinzel);
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(184, 107, 0, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(184, 107, 0, 0.6), 0 0 60px rgba(184, 107, 0, 0.3); }
+}
+
+@keyframes textGlow {
+  from { text-shadow: 0 0 10px rgba(184, 107, 0, 0.5), 0 0 20px rgba(184, 107, 0, 0.3); }
+  to { text-shadow: 0 0 20px rgba(184, 107, 0, 0.8), 0 0 40px rgba(184, 107, 0, 0.5); }
+}
+
+@keyframes shimmerEffect {
+  from { left: -100%; }
+  to { left: 100%; }
+}
+
+@keyframes floating {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.animate-text-glow {
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+.animate-float {
+  animation: floating 3s ease-in-out infinite;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(ellipse at top, #1a1a1a, #000000);
+  overflow-x: hidden;
+  color: var(--color-cream);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #b86b00;
+  color: #f5e1c0;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #b86b00, #8b4513);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #d4820f, #a0522d);
+}
