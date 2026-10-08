@@ -1,8 +1,14 @@
-"use client"
-
+import type { Metadata } from "next"
 import Image from "next/image"
 import { ScrollReveal } from "@/components/ScrollReveal"
-import { motion } from "framer-motion"
+import { houses } from "@/data/houses"
+import { HouseGrid } from "./HouseGrid"
+
+export const metadata: Metadata = {
+  title: "Great Houses",
+  description:
+    "The fourteen great houses of Westeros — their words, seats, sigils and the bloodlines that chose sides in the Dance of the Dragons.",
+}
 
 interface Character {
   src: string
@@ -16,23 +22,7 @@ interface HouseSection {
   characters: Character[]
 }
 
-const houses = [
-  { src: "/housesimages/Targaryen.jpg", name: "House Targaryen", description: "House Targaryen is a once-great dynasty descended from ancient Valyria, known for its dragons, silver hair, and fiery ambition. For centuries they ruled Westeros through fire and blood, their power rooted in both prophecy and destruction. Their legacy is defined by internal conflict, political intrigue, and the struggle to balance destiny with human weakness. Though often brilliant and visionary, Targaryens are equally prone to madness, making their rule both magnificent and tragic." },
-  { src: "/housesimages/Stark.webp", name: "House Stark", description: "House Stark is one of Westeros' oldest families, descended from the First Men and deeply tied to the harsh, honorable North. They rule from Winterfell with a steadfast code of integrity and loyalty, values that set them apart in a world of political corruption. Known for their solemn nature and resilience, the Starks embody duty and sacrifice, often paying a heavy price for their unwavering principles. Their house words — 'Winter is Coming' — reflect both the climate they endure and the hardships that define their story." },
-  { src: "/housesimages/Lannister.webp", name: "House Lannister", description: "House Lannister is the wealthiest and most politically formidable family in Westeros, ruling from the golden halls of Casterly Rock. With immense resources, sharp intellect, and an obsession with legacy, the Lannisters dominate court politics through strategy, intimidation, and charm. Their reputation is shaped by pride and ruthlessness, but also brilliance and ambition. Above all, they are defined by the belief that power must be seized and maintained at any cost — and that a Lannister always pays their debts." },
-  { src: "/housesimages/Velaryon.jpg", name: "House Velaryon", description: "House Velaryon is an ancient Valyrian house renowned for its naval mastery, seafaring prowess, and deep ties to House Targaryen. From their seat at Driftmark, they command the wealth of global trade routes and boast some of the finest fleets in history. Though lacking dragons, their influence often rivals that of kings, built on ambition, exploration, and political shrewdness. Their identity blends maritime strength with Valyrian heritage, making them essential players in every major conflict of their era." },
-  { src: "/housesimages/Hightower.png", name: "House Hightower", description: "House Hightower is one of the oldest and most respected noble families, ruling from the towering beacon of Oldtown. Known for their wealth, scholarship, and connection to the Citadel and Faith of the Seven, they are a powerful cultural and political force. Reserved yet calculating, the Hightowers often exert influence subtly rather than through open warfare. Their ambitions run deep, and through diplomacy, marriage, and manipulation, they shape the realm from behind the scenes." },
-  { src: "/housesimages/Baratheon.webp", name: "House Baratheon", description: "House Baratheon is a storm-forged dynasty known for its fierce warriors, tempestuous tempers, and unyielding resilience. Founded by Orys Baratheon after Aegon's Conquest, they rule the Stormlands with a blend of raw strength and stubborn pride. Baratheons are often larger-than-life figures — bold, charismatic, and prone to conflict — whose actions help spark major turning points in Westerosi history. Their storm-born nature makes them both formidable allies and dangerous rivals." },
-  { src: "/housesimages/Greyjoy.jpg", name: "House Greyjoy", description: "House Greyjoy rules the Iron Islands with a harsh, seafaring culture built on raiding, independence, and devotion to the Drowned God. The Ironborn value strength over diplomacy, believing in taking what is not freely given. Their identity is shaped by salt, steel, and storm, producing fierce leaders and brutal rebellions. While their isolation makes them outsiders to mainland politics, their ambition and naval power ensure they are never truly ignored." },
-  { src: "/housesimages/Tyrell.jpg", name: "House Tyrell", description: "House Tyrell is a wealthy and politically savvy family that rules the fertile Reach, the breadbasket of the realm. Known for elegance, charm, and strategic marriages, they thrive in court diplomacy where others rely on brute force. Their public image is friendly and refined, but beneath the flowers lies sharp ambition and formidable cunning. The Tyrells excel at subtle influence, building alliances and shaping kingdoms with a smile." },
-  { src: "/housesimages/Tully.webp", name: "House Tully", description: "House Tully governs the Riverlands from Riverrun, valuing family, loyalty, and honor above all else. Positioned at the crossroads of Westeros, their lands frequently become battlegrounds, forcing them into difficult alliances and costly conflicts. Though sometimes underestimated, the Tullys have strong leaders and deep emotional bonds that drive their decisions. Their house motto — 'Family, Duty, Honor' — perfectly reflects their priorities and the burdens they carry." },
-  { src: "/housesimages/Arryn.jpg", name: "House Arryn", description: "House Arryn is one of the oldest and noblest Westerosi families, ruling the Vale from the impregnable Eyrie. Proud and honorable, they maintain a tradition of justice and chivalry, emphasizing purity of blood and moral integrity. Their mountainous homeland keeps them isolated and difficult to challenge, giving them strategic strength and political stability. Even so, internal vulnerabilities and personal tragedies often shape their fate." },
-  { src: "/housesimages/Bolton.webp", name: "House Bolton", description: "House Bolton is a cold, ruthless Northern house infamous for cruelty, deception, and a chilling tradition of flaying their enemies. Their power comes not from honor but fear, manipulation, and calculated brutality. While they briefly rise to dominance through betrayal, their lack of loyalty ultimately weakens them. They stand as the dark mirror of the Stark values — ambitious, treacherous, and defined by terror." },
-  { src: "/housesimages/Mormont.png", name: "House Mormont", description: "House Mormont is a loyal Northern house known for its fierce warriors and resilient leadership despite its small size. Ruling Bear Island, they live harsh lives shaped by rugged terrain and constant threats, forging them into some of the North's toughest fighters. Their matriarchal lineage produces remarkable women and devoted commanders who embody Northern honor. Though humble in resources, their courage commands respect across the realm." },
-  { src: "/housesimages/Frey.jpg", name: "House Frey", description: "House Frey is a populous but lowborn-seeming house that rose to prominence by controlling the vital Twins crossing. Though wealthier and more influential than their reputation suggests, they are widely viewed as untrustworthy opportunists. Their ambition and resentment culminate in the infamous Red Wedding, securing them power through betrayal rather than honor. The Freys represent the brutal pragmatism of Westerosi politics at its worst." },
-  { src: "/housesimages/Martell.jpg", name: "House Martell", description: "House Martell rules the sun-scorched deserts of Dorne with a culture that values independence, passion, and fierce resilience. Unlike much of Westeros, they embrace gender equality, cultural diversity, and a deep sense of honor tied to vengeance and loyalty. Their ruling style is measured and patient, but when wronged, they retaliate with deadly precision. The Martells' unique traditions and fiery defiance set them apart from every other realm in the Seven Kingdoms." },
-]
-
+/** Portrait galleries kept from the original page — one grouping per house. */
 const characterSections: HouseSection[] = [
   {
     house: "House Targaryen",
@@ -161,72 +151,91 @@ const characterSections: HouseSection[] = [
   },
 ]
 
-export default function GreatHouses() {
+export default function GreatHousesPage() {
   return (
     <div className="pt-24 pb-12">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto max-w-7xl px-4">
         <ScrollReveal variant="up">
-          <h1 className="text-3xl md:text-5xl font-bold text-gold-primary text-center mb-12">
-            Great Houses of Westeros
-          </h1>
+          <header className="mb-4 text-center">
+            <p className="eyebrow mb-4">Bloodlines of the Realm</p>
+            <h1 className="text-3xl font-bold text-gold-primary md:text-5xl">
+              Great Houses of Westeros
+            </h1>
+          </header>
         </ScrollReveal>
 
-        <div className="space-y-8 mb-16">
-          {houses.map((house, i) => (
-            <ScrollReveal key={house.name} variant="up" delay={i * 0.05}>
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                className="flex flex-col md:flex-row gap-6 bg-black/40 border border-gold-primary/20 rounded-2xl p-6 backdrop-blur-sm hover:border-gold-primary/50 transition-all duration-500"
-              >
-                <div className="relative w-full md:w-48 h-48 md:h-48 flex-shrink-0 rounded-xl overflow-hidden border-2 border-gold-primary/30">
-                  <Image src={house.src} alt={house.name} fill className="object-cover" sizes="192px" />
+        <ScrollReveal variant="up" delay={0.1}>
+          <div className="rule mx-auto mb-8 max-w-xl">
+            <span />
+          </div>
+          <div className="mx-auto mb-14 max-w-3xl space-y-4 text-center text-sm leading-relaxed text-cream/70 md:text-base">
+            <p>
+              The great houses are the bloodlines that bend the realm to their will — ancient
+              families whose words are sworn as oaths, whose banners, once raised, are declarations
+              of war, and whose marriages redraw the map. Fourteen stand above the rest, from the
+              dragons of Dragonstone to the wolves of Winterfell, each carrying a sigil that has
+              outlived a dozen kings.
+            </p>
+            <p>
+              None mattered more to the <span className="text-gold-primary">Dance of the
+              Dragons</span> than these. A Hightower queen and a Targaryen princess split the Iron
+              Throne in two, and every other house was forced to choose a side — or be ground
+              between them. Follow a banner below to its words, its seat, its notable figures and
+              the full profile of the house behind it.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <HouseGrid houses={houses} />
+
+        {/* Rich portrait galleries kept from the original page */}
+        <div className="mt-24">
+          <ScrollReveal variant="up">
+            <div className="mb-10 text-center">
+              <p className="eyebrow mb-3">Faces of Fire and Blood</p>
+              <h2 className="text-2xl font-bold text-gold-primary md:text-4xl">
+                Notable Figures of the Realm
+              </h2>
+            </div>
+          </ScrollReveal>
+
+          {characterSections.map((section, idx) => (
+            <div key={`${section.house}-${section.era ?? idx}`} className="mb-12">
+              <ScrollReveal variant="up" delay={0.1}>
+                <div className="mb-5 flex items-baseline gap-3">
+                  <h3 className="text-xl font-bold text-cream md:text-2xl">{section.house}</h3>
+                  {section.era && (
+                    <span className="text-sm text-gold-light md:text-lg">{section.era}</span>
+                  )}
                 </div>
-                <div className="flex-1">
-                  <h2 className="text-xl md:text-2xl font-bold text-gold-primary mb-3">{house.name}</h2>
-                  <p className="text-cream/70 text-sm md:text-base leading-relaxed">{house.description}</p>
-                </div>
-              </motion.div>
-            </ScrollReveal>
+              </ScrollReveal>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                {section.characters.map((char, i) => (
+                  <ScrollReveal key={char.name} variant="up" delay={i * 0.03}>
+                    <article className="panel group h-full overflow-hidden">
+                      <div className="relative h-48 overflow-hidden md:h-56">
+                        <Image
+                          src={char.src}
+                          alt={char.name}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                          sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                      </div>
+                      <div className="p-4">
+                        <h4 className="mb-1 text-sm font-bold text-cream md:text-base">
+                          {char.name}
+                        </h4>
+                        <p className="text-xs leading-relaxed text-cream/50">{char.description}</p>
+                      </div>
+                    </article>
+                  </ScrollReveal>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
-
-        <ScrollReveal variant="up">
-          <h2 className="text-2xl md:text-4xl font-bold text-gold-primary text-center mb-8">Characters</h2>
-        </ScrollReveal>
-
-        {characterSections.map((section, idx) => (
-          <div key={`${section.house}-${section.era ?? idx}`} className="mb-12">
-            <ScrollReveal variant="up" delay={0.1}>
-              <h2 className="text-2xl font-bold text-cream mb-2">{section.house}</h2>
-              {section.era && <h3 className="text-gold-light mb-6 text-lg">{section.era}</h3>}
-            </ScrollReveal>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {section.characters.map((char, i) => (
-                <ScrollReveal key={char.name} variant="up" delay={i * 0.03}>
-                  <motion.div
-                    whileHover={{ y: -8, scale: 1.02 }}
-                    className="group bg-black/30 border border-gold-primary/10 rounded-xl overflow-hidden hover:border-gold-primary/40 transition-all duration-500"
-                  >
-                    <div className="relative h-48 md:h-56 overflow-hidden">
-                      <Image
-                        src={char.src}
-                        alt={char.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-cream font-bold text-sm md:text-base mb-1">{char.name}</h3>
-                      <p className="text-cream/50 text-xs leading-relaxed">{char.description}</p>
-                    </div>
-                  </motion.div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   )

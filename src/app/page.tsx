@@ -1,241 +1,429 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
-import useEmblaCarousel from "embla-carousel-react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import Link from "next/link"
+import { AnimatePresence } from "framer-motion"
+import { ArrowRight, Search, Map as MapIcon, ChevronRight } from "lucide-react"
 import { ScrollReveal } from "@/components/ScrollReveal"
+import { SearchOverlay } from "@/components/SearchOverlay"
+import { dragons, featuredDragons } from "@/data/dragons"
+import { characters, featuredCharacters } from "@/data/characters"
+import { houses, featuredHouses } from "@/data/houses"
+import { locations } from "@/data/locations"
+import { events } from "@/data/events"
 
-const greetings = [
-  "You stand before the blood of the dragon—be honored and speak true.",
-  "You're welcome here, though the North keeps its eyes open.",
-  "The Rock welcomes those who come with respect.",
+/* Deterministic embers — same list on server and client. */
+const embers = Array.from({ length: 22 }, (_, i) => ({
+  left: (i * 37) % 100,
+  bottom: (i * 23) % 60,
+  size: 2 + ((i * 7) % 4),
+  duration: 6 + ((i * 3) % 7),
+  delay: (i * 0.9) % 8,
+  drift: ((i % 5) - 2) * 14,
+}))
+
+const realmLinks = [
+  { href: "/dragons", glyph: "🐉", label: "Dragons", note: `${dragons.length} beasts of flame` },
+  { href: "/characters", glyph: "⚔️", label: "Characters", note: `${characters.length} figures of the war` },
+  { href: "/greathouses", glyph: "🏰", label: "Great Houses", note: `${houses.length} bloodlines` },
+  { href: "/locations", glyph: "🗺️", label: "Locations", note: `${locations.length} seats of power` },
+  { href: "/map", glyph: "🧭", label: "Interactive Map", note: "Click through Westeros" },
+  { href: "/timeline", glyph: "📜", label: "Timeline", note: `${events.length} moments, 129–153 AC` },
+  { href: "/organizations", glyph: "🛡️", label: "Organizations", note: "Orders & councils" },
+  { href: "/magic", glyph: "✨", label: "Magic", note: "Fire, greensight, steel" },
+  { href: "/races", glyph: "🧬", label: "Races", note: "Men, giants & more" },
 ]
-
-const carousel1 = [
-  { src: "/lopp/war1.webp", title: "The War Begins" },
-  { src: "/lopp/war2.avif", title: "Dragons Soar" },
-  { src: "/lopp/war3.webp", title: "Battle Lines" },
-  { src: "/lopp/war4.webp", title: "Fire and Blood" },
-  { src: "/lopp/war5.jpg", title: "Crown Ablaze" },
-  { src: "/lopp/war6.avif", title: "Dragon's Fury" },
-  { src: "/lopp/war7.jpg", title: "Iron Throne" },
-  { src: "/lopp/war8.jpg", title: "War Council" },
-  { src: "/lopp/war9.jpg", title: "Siege Lines" },
-  { src: "/lopp/war10.webp", title: "Dragon Riders" },
-  { src: "/lopp/war11.avif", title: "Final Stand" },
-  { src: "/lopp/war12.jpg", title: "Aftermath" },
-]
-
-const carousel2 = [
-  { src: "/lopp/war13.webp", title: "Royal Procession" },
-  { src: "/lopp/war14.jpg", title: "King's Landing" },
-  { src: "/lopp/war15.avif", title: "Northern Forces" },
-  { src: "/lopp/war16.jpg", title: "Dragonstone" },
-  { src: "/lopp/war17.jpg", title: "Harrenhal" },
-  { src: "/lopp/war18.jpg", title: "The Reach" },
-  { src: "/lopp/war19.jpg", title: "Dorne Warriors" },
-  { src: "/lopp/war20.jpg", title: "Iron Fleet" },
-  { src: "/lopp/war21.jpg", title: "The Wall" },
-  { src: "/lopp/war22.jpg", title: "Winterfell" },
-  { src: "/lopp/war23.avif", title: "The Crownlands" },
-  { src: "/lopp/war24.avif", title: "Riverlands" },
-]
-
-function CarouselSection({ images, delay }: { images: typeof carousel1; delay: number }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: "start",
-    dragFree: true,
-  })
-  const [canScrollPrev, setCanScrollPrev] = useState(false)
-  const [canScrollNext, setCanScrollNext] = useState(true)
-
-  useEffect(() => {
-    if (!emblaApi) return
-    const onUpdate = () => {
-      setCanScrollPrev(emblaApi.canScrollPrev())
-      setCanScrollNext(emblaApi.canScrollNext())
-    }
-    emblaApi.on("select", onUpdate)
-    emblaApi.on("reInit", onUpdate)
-    onUpdate()
-  }, [emblaApi])
-
-  return (
-    <ScrollReveal variant="up" delay={delay}>
-      <div className="relative group">
-        <div className="overflow-hidden rounded-xl" ref={emblaRef}>
-          <div className="flex gap-4 py-4">
-            {images.map((img, i) => (
-              <div
-                key={i}
-                className="flex-[0_0_280px] md:flex-[0_0_320px] relative overflow-hidden rounded-xl group/card cursor-pointer"
-              >
-                <div className="relative h-48 md:h-56 overflow-hidden rounded-xl border-2 border-gold-primary/30 transition-all duration-500 hover:border-gold-primary hover:shadow-xl hover:shadow-gold-primary/30">
-                  <Image
-                    src={img.src}
-                    alt={img.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover/card:scale-110"
-                    sizes="320px"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover/card:translate-y-0 transition-transform duration-300">
-                    <p className="text-cream text-sm font-bold text-center">{img.title}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => emblaApi?.scrollPrev()}
-          disabled={!canScrollPrev}
-          className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-gold-primary/30 flex items-center justify-center text-cream opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gold-primary/30 disabled:opacity-0"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft size={20} />
-        </button>
-        <button
-          type="button"
-          onClick={() => emblaApi?.scrollNext()}
-          disabled={!canScrollNext}
-          className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-gold-primary/30 flex items-center justify-center text-cream opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gold-primary/30 disabled:opacity-0"
-          aria-label="Next slide"
-        >
-          <ChevronRight size={20} />
-        </button>
-      </div>
-    </ScrollReveal>
-  )
-}
 
 export default function Home() {
-  const [loading, setLoading] = useState(true)
-  const [greetIndex, setGreetIndex] = useState(0)
-  const [progress, setProgress] = useState(0)
-  const [particles] = useState<{ x: number; y: number; size: number; speed: number; delay: number }[]>([])
+  const [searchOpen, setSearchOpen] = useState(false)
 
-  useEffect(() => {
-    const p = Array.from({ length: 50 }, () => ({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 4 + 1,
-      speed: Math.random() * 3 + 1,
-      delay: Math.random() * 5,
-    }))
-    particles.push(...p)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    if (!loading) return
-    const greetInterval = setInterval(() => {
-      setGreetIndex((prev) => (prev + 1) % greetings.length)
-    }, 2500)
-
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(progressInterval)
-          clearInterval(greetInterval)
-          setTimeout(() => setLoading(false), 500)
-          return 100
-        }
-        return prev + 2
-      })
-    }, 50)
-
-    return () => {
-      clearInterval(greetInterval)
-      clearInterval(progressInterval)
-    }
-  }, [loading])
-
-  if (loading) {
-    return (
-      <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center overflow-hidden">
-        {particles.map((p, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-gold-primary/40"
-            style={{
-              width: p.size,
-              height: p.size,
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.8, 0.2],
-            }}
-            transition={{
-              duration: p.speed,
-              repeat: Infinity,
-              delay: p.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={greetIndex}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="text-center px-4 mb-8"
-          >
-            <h2 className="text-cream text-lg md:text-xl lg:text-2xl font-bold max-w-2xl mx-auto leading-relaxed">
-              {greetings[greetIndex]}
-            </h2>
-          </motion.div>
-        </AnimatePresence>
-
-        <div className="relative w-64 md:w-96">
-          <div className="relative overflow-hidden rounded-full h-2 bg-zinc-800 border border-gold-primary/30">
-            <motion.div
-              className="h-full bg-gradient-to-r from-gold-dark via-gold-primary to-gold-light rounded-full"
-              style={{ width: `${progress}%` }}
-              transition={{ duration: 0.1 }}
-            />
-          </div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, duration: 1 }}
-          className="mt-12 text-center"
-        >
+  return (
+    <>
+      {/* ---------------------------------------------------------- HERO */}
+      <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden">
+        <div className="absolute inset-0">
           <Image
             src="/map.webp"
             alt="Map of Westeros"
-            width={300}
-            height={200}
-            className="rounded-lg opacity-60 mx-auto"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover opacity-[0.28] saturate-50"
           />
-          <h2 className="text-cream/80 text-sm md:text-base max-w-xl mx-auto mt-4 px-4 leading-relaxed">
-            Welcome to the <strong className="text-gold-primary">Known World</strong>! Where humans and dragons rise,
-            clash, and carve their legends into the very bones of the earth. Step carefully—every step is a story, and
-            every story has its price.
-          </h2>
-        </motion.div>
-      </div>
-    )
-  }
+          <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/60 to-ink" />
+          <div className="absolute inset-0 parchment" />
+        </div>
 
-  return (
-    <div className="pt-20 pb-12">
-      <div className="max-w-7xl mx-auto px-4">
-        <CarouselSection images={carousel1} delay={0.1} />
-        <CarouselSection images={carousel2} delay={0.3} />
-      </div>
-    </div>
+        {/* Slowly rising embers */}
+        <div className="pointer-events-none absolute inset-0" aria-hidden>
+          {embers.map((e, i) => (
+            <span
+              key={i}
+              className="absolute rounded-full bg-gold-light/70"
+              style={{
+                left: `${e.left}%`,
+                bottom: `${e.bottom}%`,
+                width: e.size,
+                height: e.size,
+                animation: `emberRise ${e.duration}s linear ${e.delay}s infinite`,
+                ["--ember-drift" as string]: `${e.drift}px`,
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="relative mx-auto w-full max-w-5xl px-4 pb-24 pt-32 text-center">
+          <ScrollReveal variant="up">
+            <p className="eyebrow mb-6">An Interactive Archive of Westeros</p>
+          </ScrollReveal>
+
+          <ScrollReveal variant="up" delay={0.1}>
+            <h1 className="font-[family-name:var(--font-display)] text-[clamp(2.2rem,7vw,5.5rem)] font-bold leading-[1.05] text-cream">
+              THE DANCE
+              <span className="mt-1 block text-gold-primary">OF THE DRAGONS</span>
+            </h1>
+          </ScrollReveal>
+
+          <ScrollReveal variant="up" delay={0.2}>
+            <div className="rule mx-auto my-8 max-w-md">
+              <span />
+            </div>
+            <p className="mx-auto max-w-2xl text-sm leading-relaxed text-cream/70 md:text-base">
+              Fire and blood split a dynasty. Walk the Targaryen civil war year by
+              year, mount the dragons that shaped it, trace the great houses,
+              places and figures of the realm — every entry links to the next.
+            </p>
+          </ScrollReveal>
+
+          <ScrollReveal variant="up" delay={0.3}>
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="group mx-auto mt-10 flex w-full max-w-xl items-center gap-3 rounded-full border border-gold-primary/35 bg-black/50 px-5 py-3.5 text-left backdrop-blur-md transition-all hover:border-gold-primary/70 hover:bg-black/70"
+            >
+              <Search size={17} className="text-gold-primary" />
+              <span className="flex-1 text-sm text-cream/50 transition-colors group-hover:text-cream/80">
+                Search dragons, houses, characters, places, events…
+              </span>
+              <kbd className="rounded border border-gold-primary/30 px-2 py-0.5 text-[10px] uppercase tracking-widest text-cream/50">
+                ⌘K
+              </kbd>
+            </button>
+          </ScrollReveal>
+
+          <ScrollReveal variant="up" delay={0.4}>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link href="/dragons" className="btn-gold inline-flex items-center gap-2">
+                Enter the Realm <ArrowRight size={15} />
+              </Link>
+              <Link href="/map" className="btn-ghost inline-flex items-center gap-2">
+                <MapIcon size={15} /> Explore the Map
+              </Link>
+            </div>
+          </ScrollReveal>
+        </div>
+
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.4em] text-cream/40">
+          Scroll
+        </div>
+      </section>
+
+      {/* -------------------------------------------------------- THE REALM */}
+      <section className="relative mx-auto max-w-7xl px-4 py-20">
+        <ScrollReveal variant="up">
+          <p className="eyebrow text-center">The Known World, indexed</p>
+          <h2 className="mt-3 text-center text-3xl font-bold text-cream md:text-4xl">
+            Choose Your Path
+          </h2>
+        </ScrollReveal>
+
+        <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 lg:gap-4">
+          {realmLinks.map((item, i) => (
+            <ScrollReveal key={item.href} variant="up" delay={i * 0.04}>
+              <Link
+                href={item.href}
+                className="panel group flex h-full flex-col justify-between gap-3 p-4 md:p-5"
+              >
+                <div className="flex items-start justify-between">
+                  <span className="text-2xl transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110 md:text-3xl">
+                    {item.glyph}
+                  </span>
+                  <ChevronRight
+                    size={16}
+                    className="text-cream/30 transition-all group-hover:translate-x-1 group-hover:text-gold-primary"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-cream transition-colors group-hover:text-gold-primary md:text-lg">
+                    {item.label}
+                  </h3>
+                  <p className="text-xs text-cream/50">{item.note}</p>
+                </div>
+              </Link>
+            </ScrollReveal>
+          ))}
+        </div>
+      </section>
+
+      {/* --------------------------------------------------- DRAGONS TEASER */}
+      <section className="relative overflow-hidden border-y border-gold-primary/15 bg-black/40 py-20">
+        <div className="mx-auto max-w-7xl px-4">
+          <ScrollReveal variant="up">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow">Dragons of the Dance</p>
+                <h2 className="mt-3 text-3xl font-bold text-cream md:text-4xl">
+                  The Last Generation of Dragons
+                </h2>
+              </div>
+              <Link
+                href="/dragons"
+                className="group inline-flex items-center gap-2 text-sm text-gold-primary transition-colors hover:text-gold-light"
+              >
+                All {dragons.length} dragons
+                <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </ScrollReveal>
+
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredDragons.slice(0, 6).map((dragon, i) => (
+              <ScrollReveal key={dragon.slug} variant="up" delay={i * 0.06} className="h-full">
+                <Link
+                  href={`/dragons/${dragon.slug}`}
+                  className="panel group relative block h-full overflow-hidden"
+                >
+                  <div className="relative h-56 overflow-hidden">
+                    {dragon.images[0] && (
+                      <Image
+                        src={dragon.images[0]}
+                        alt={dragon.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
+                    <span className="absolute left-3 top-3 rounded-full border border-gold-primary/40 bg-black/60 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-gold-primary backdrop-blur">
+                      {dragon.status}
+                    </span>
+                  </div>
+                  <div className="relative -mt-12 p-5">
+                    <h3 className="text-xl font-bold text-cream transition-colors group-hover:text-gold-primary">
+                      {dragon.name}
+                    </h3>
+                    {dragon.epithet && (
+                      <p className="text-sm italic text-gold-primary/80">{dragon.epithet}</p>
+                    )}
+                    <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-cream/60">
+                      {dragon.description}
+                    </p>
+                    <div className="mt-4 flex gap-4 text-[10px] uppercase tracking-[0.2em] text-cream/45">
+                      <span>Size {dragon.stats.size}</span>
+                      <span>Combat {dragon.stats.combat}</span>
+                      <span className="ml-auto text-gold-primary opacity-0 transition-opacity group-hover:opacity-100">
+                        Profile →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------- CHARACTERS + HOUSES */}
+      <section className="mx-auto max-w-7xl px-4 py-20">
+        <div className="grid gap-12 lg:grid-cols-2">
+          <div>
+            <ScrollReveal variant="up">
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <p className="eyebrow">The Players</p>
+                  <h2 className="mt-3 text-3xl font-bold text-cream">
+                    Figures of the Realm
+                  </h2>
+                </div>
+                <Link
+                  href="/characters"
+                  className="text-sm text-gold-primary transition-colors hover:text-gold-light"
+                >
+                  All →
+                </Link>
+              </div>
+            </ScrollReveal>
+
+            <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+              {featuredCharacters.slice(0, 6).map((c, i) => (
+                <ScrollReveal key={c.slug} variant="up" delay={i * 0.05} className="h-full">
+                  <Link
+                    href={`/characters/${c.slug}`}
+                    className="panel group block h-full overflow-hidden"
+                  >
+                    <div className="relative aspect-[3/4] overflow-hidden">
+                      {c.image && (
+                        <Image
+                          src={c.image}
+                          alt={c.name}
+                          fill
+                          sizes="(max-width: 640px) 33vw, 20vw"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent" />
+                    </div>
+                    <div className="p-3">
+                      <h3 className="truncate text-sm font-semibold text-cream transition-colors group-hover:text-gold-primary">
+                        {c.name}
+                      </h3>
+                      <p className="truncate text-[11px] text-cream/50">{c.houseLabel}</p>
+                    </div>
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <ScrollReveal variant="up">
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <p className="eyebrow">Bloodlines</p>
+                  <h2 className="mt-3 text-3xl font-bold text-cream">Great Houses</h2>
+                </div>
+                <Link
+                  href="/greathouses"
+                  className="text-sm text-gold-primary transition-colors hover:text-gold-light"
+                >
+                  All →
+                </Link>
+              </div>
+            </ScrollReveal>
+
+            <div className="mt-6 space-y-3">
+              {featuredHouses.slice(0, 5).map((h, i) => (
+                <ScrollReveal key={h.slug} variant="up" delay={i * 0.05}>
+                  <Link
+                    href={`/houses/${h.slug}`}
+                    className="panel group flex items-center gap-4 p-3"
+                  >
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-gold-primary/25">
+                      <Image
+                        src={h.image}
+                        alt={h.name}
+                        fill
+                        sizes="64px"
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span aria-hidden>{h.sigil}</span>
+                        <h3 className="truncate text-base font-semibold text-cream transition-colors group-hover:text-gold-primary">
+                          {h.name}
+                        </h3>
+                      </div>
+                      <p className="truncate text-xs italic text-gold-primary/70">
+                        “{h.words}”
+                      </p>
+                      <p className="truncate text-[11px] text-cream/45">
+                        {h.region} · {h.seat}
+                      </p>
+                    </div>
+                    <ChevronRight
+                      size={16}
+                      className="shrink-0 text-cream/30 transition-all group-hover:translate-x-1 group-hover:text-gold-primary"
+                    />
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------ TIMELINE CTA */}
+      <section className="relative overflow-hidden border-t border-gold-primary/15 bg-black/50 py-20">
+        <div className="mx-auto max-w-7xl px-4">
+          <ScrollReveal variant="up">
+            <p className="eyebrow text-center">129 – 153 AC</p>
+            <h2 className="mt-3 text-center text-3xl font-bold text-cream md:text-4xl">
+              The War, Year by Year
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-center text-sm text-cream/60">
+              From the death of Viserys I to the last dragon&apos;s breath — every
+              battle, betrayal and coronation, linked to the people who lived it.
+            </p>
+          </ScrollReveal>
+
+          <div className="mx-auto mt-10 max-w-3xl">
+            {events.slice(0, 5).map((event, i) => (
+              <ScrollReveal key={event.slug} variant="up" delay={i * 0.06}>
+                <Link
+                  href={`/timeline#${event.slug}`}
+                  className="group flex items-start gap-4 border-b border-gold-primary/10 py-4 transition-colors hover:bg-gold-primary/5"
+                >
+                  <span className="w-16 shrink-0 pt-1 text-right font-[family-name:var(--font-cinzel)] text-lg font-bold text-gold-primary">
+                    {event.year}
+                  </span>
+                  <span className="mt-2 h-2 w-2 shrink-0 rotate-45 border border-gold-primary/60 transition-colors group-hover:bg-gold-primary" />
+                  <span className="min-w-0">
+                    <span className="block text-[15px] text-cream transition-colors group-hover:text-gold-primary">
+                      {event.title}
+                    </span>
+                    <span className="block text-xs text-cream/50">{event.summary}</span>
+                  </span>
+                </Link>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <ScrollReveal variant="up" delay={0.2}>
+            <div className="mt-10 text-center">
+              <Link href="/timeline" className="btn-ghost inline-flex items-center gap-2">
+                Walk the full timeline <ArrowRight size={15} />
+              </Link>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* --------------------------------------------------------- CLOSING */}
+      <section className="relative overflow-hidden">
+        <div className="relative h-[46vh] min-h-[320px]">
+          <Image
+            src="/lopp/war5.jpg"
+            alt="A crown in flames"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/40" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
+            <h2 className="font-[family-name:var(--font-display)] text-3xl text-cream md:text-5xl">
+              &ldquo;Fire and Blood.&rdquo;
+            </h2>
+            <p className="mt-4 max-w-xl text-sm text-cream/60">
+              Every entry in this archive is cross-linked — dragons to riders,
+              riders to houses, houses to seats, seats to battles.
+            </p>
+            <div className="mt-6 flex gap-3">
+              <Link href="/dragons" className="btn-gold">
+                Enter the Realm
+              </Link>
+              <Link href="/timeline" className="btn-ghost">
+                The Timeline
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <AnimatePresence>
+        {searchOpen && <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />}
+      </AnimatePresence>
+    </>
   )
 }

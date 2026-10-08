@@ -1,55 +1,54 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Aged gold — the primary accent */
   --color-gold-primary: #b86b00;
   --color-gold-light: #d4820f;
   --color-gold-dark: #8b4513;
+
+  /* Warm parchment / bone used for text */
   --color-cream: #f5e1c0;
   --color-brown-dark: #5c3a21;
   --color-brown-light: #4a2f1a;
 
+  /* Blood red — the secondary accent */
+  --color-blood: #8f1f1f;
+  --color-blood-bright: #b32828;
+  --color-blood-dark: #551111;
+
+  /* Ink & charcoal — the dark fantasy ground */
+  --color-ink: #0a0908;
+  --color-charcoal: #14120f;
+
   --font-cinzel: var(--font-cinzel);
-  --font-sans: var(--font-cinzel);
+  --font-display: var(--font-display);
+  --font-ui: var(--font-ui);
+  --font-sans: var(--font-ui);
 }
 
-@keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(184, 107, 0, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(184, 107, 0, 0.6), 0 0 60px rgba(184, 107, 0, 0.3); }
-}
-
-@keyframes textGlow {
-  from { text-shadow: 0 0 10px rgba(184, 107, 0, 0.5), 0 0 20px rgba(184, 107, 0, 0.3); }
-  to { text-shadow: 0 0 20px rgba(184, 107, 0, 0.8), 0 0 40px rgba(184, 107, 0, 0.5); }
-}
-
-@keyframes shimmerEffect {
-  from { left: -100%; }
-  to { left: 100%; }
-}
-
-@keyframes floating {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-}
-
-.animate-glow-pulse {
-  animation: glowPulse 3s ease-in-out infinite;
-}
-
-.animate-text-glow {
-  animation: textGlow 2s ease-in-out infinite alternate;
-}
-
-.animate-float {
-  animation: floating 3s ease-in-out infinite;
-}
+/* ---------------------------------------------------------------- *
+ * Base
+ * ---------------------------------------------------------------- */
 
 body {
   margin: 0;
   padding: 0;
-  background: radial-gradient(ellipse at top, #1a1a1a, #000000);
+  background: #0a0908
+    radial-gradient(ellipse at top, rgba(184, 107, 0, 0.08), transparent 60%);
   overflow-x: hidden;
   color: var(--color-cream);
+  font-family: var(--font-ui);
+}
+
+/* Every heading inherits the roman serif, body copy stays sans. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-cinzel);
+  letter-spacing: 0.01em;
 }
 
 html {
@@ -66,7 +65,7 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: #14120f;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -76,4 +75,237 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #d4820f, #a0522d);
+}
+
+/* ---------------------------------------------------------------- *
+ * Shared design system
+ * Used across every page — keep these stable.
+ * ---------------------------------------------------------------- */
+
+/* Glass / charcoal card with a hairline gold border. */
+.panel {
+  background: rgba(8, 7, 6, 0.55);
+  border: 1px solid rgba(184, 107, 0, 0.2);
+  border-radius: 1rem;
+  backdrop-filter: blur(6px);
+  transition:
+    border-color 0.4s ease,
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.panel:hover {
+  border-color: rgba(184, 107, 0, 0.5);
+  box-shadow: 0 18px 40px -24px rgba(184, 107, 0, 0.55);
+}
+
+/* Small tracked-out label above a section title. */
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.38em;
+  color: rgba(184, 107, 0, 0.75);
+}
+
+/* Ornamented divider: line — diamond — line */
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(184, 107, 0, 0.5);
+}
+
+.rule::before,
+.rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(184, 107, 0, 0.45),
+    transparent
+  );
+}
+
+.rule span {
+  width: 6px;
+  height: 6px;
+  rotate: 45deg;
+  background: rgba(184, 107, 0, 0.7);
+}
+
+/* Primary action */
+.btn-gold {
+  font-family: var(--font-cinzel);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 0.85rem 2rem;
+  border-radius: 9999px;
+  color: #14120f;
+  background: linear-gradient(120deg, #d4820f, #b86b00 55%, #8b4513);
+  border: 1px solid rgba(245, 225, 192, 0.35);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 16px 34px -18px rgba(212, 130, 15, 0.9);
+}
+
+/* Secondary action */
+.btn-ghost {
+  font-family: var(--font-cinzel);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 0.85rem 2rem;
+  border-radius: 9999px;
+  color: var(--color-cream);
+  border: 1px solid rgba(184, 107, 0, 0.4);
+  background: rgba(10, 9, 8, 0.5);
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+.btn-ghost:hover {
+  border-color: rgba(184, 107, 0, 0.8);
+  background: rgba(184, 107, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Segmented stat bar (dragon profiles, comparisons) */
+.statbar {
+  display: flex;
+  gap: 3px;
+}
+
+.statbar > i {
+  flex: 1;
+  height: 100%;
+  border-radius: 2px;
+  background: rgba(245, 225, 192, 0.12);
+}
+
+.statbar > i.on {
+  background: linear-gradient(180deg, #d4820f, #8b4513);
+}
+
+.statbar.blood > i.on {
+  background: linear-gradient(180deg, #b32828, #551111);
+}
+
+/* Subtle parchment grain used on hero panels */
+.parchment {
+  background-image:
+    radial-gradient(
+      circle at 20% 15%,
+      rgba(245, 225, 192, 0.05),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(184, 107, 0, 0.06),
+      transparent 50%
+    );
+}
+
+/* ---------------------------------------------------------------- *
+ * Motion
+ * ---------------------------------------------------------------- */
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(184, 107, 0, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 40px rgba(184, 107, 0, 0.6),
+      0 0 60px rgba(184, 107, 0, 0.3);
+  }
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow:
+      0 0 10px rgba(184, 107, 0, 0.5),
+      0 0 20px rgba(184, 107, 0, 0.3);
+  }
+  to {
+    text-shadow:
+      0 0 20px rgba(184, 107, 0, 0.8),
+      0 0 40px rgba(184, 107, 0, 0.5);
+  }
+}
+
+@keyframes shimmerEffect {
+  from {
+    left: -100%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes floating {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes emberRise {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate(var(--ember-drift, 0px), -140px) scale(0.35);
+    opacity: 0;
+  }
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.animate-text-glow {
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+.animate-float {
+  animation: floating 3s ease-in-out infinite;
+}
+
+.animate-ember {
+  animation: emberRise linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
