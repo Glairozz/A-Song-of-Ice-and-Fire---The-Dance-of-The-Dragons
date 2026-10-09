@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils"
 /**
  * `public/map.webp` is 2148 × 1399 — the stage matches the artwork's
  * aspect ratio exactly, so marker percents always line up with the map.
+ * The artwork shows Westeros (left third), the Narrow Sea and Essos.
  */
 const MAP_W = 2148
 const MAP_H = 1399
@@ -56,6 +57,109 @@ function clampOffset(dx: number, dy: number, zoom: number, vpW: number, vpH: num
 
 const round2 = (n: number) => Math.round(n * 100) / 100
 
+/* ------------------------------------------------------------------ *
+ * Searchable list of locations — rendered in the desktop side panel
+ * and (on smaller screens) below the map. Both copies share one query.
+ * ------------------------------------------------------------------ */
+interface PlacesListProps {
+  query: string
+  onQueryChange: (q: string) => void
+  selectedSlug: string | null
+  onSelect: (slug: string) => void
+  inputId: string
+}
+
+function PlacesList({ query, onQueryChange, selectedSlug, onSelect, inputId }: PlacesListProps) {
+  const q = query.trim().toLowerCase()
+  const shown = q
+    ? locations.filter(
+        (l) =>
+          l.name.toLowerCase().includes(q) ||
+          l.region.toLowerCase().includes(q) ||
+          l.type.toLowerCase().includes(q),
+      )
+    : locations
+
+  return (
+    <div>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <h3 className="eyebrow mb-0">Places of the Realm</h3>
+        <span className="rounded-full border border-gold-primary/20 bg-black/30 px-2.5 py-0.5 text-[10px] uppercase tracking-widest text-cream/50">
+          {shown.length} of {locations.length}
+        </span>
+      </div>
+
+      <label className="relative mb-3 block">
+        <span className="sr-only">Search locations by name or region</span>
+        <input
+          id={inputId}
+          type="search"
+          value={query}
+          onChange={(e) => onQueryChange(e.target.value)}
+          placeholder="Search castles, cities, regions…"
+          className="w-full rounded-xl border border-gold-primary/20 bg-black/40 px-3.5 py-2.5 pr-9 text-sm text-cream outline-none transition placeholder:text-cream/35 focus:border-gold-primary/70 focus:bg-black/60"
+        />
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gold-primary/60"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </svg>
+      </label>
+
+      {shown.length > 0 ? (
+        <ul className="grid gap-2">
+          {shown.map((loc) => {
+            const isSel = loc.slug === selectedSlug
+            return (
+              <li key={loc.slug}>
+                <button
+                  type="button"
+                  onClick={() => onSelect(loc.slug)}
+                  aria-pressed={isSel}
+                  className={cn(
+                    "group flex w-full items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition",
+                    isSel
+                      ? "border-gold-primary/70 bg-gold-primary/15"
+                      : "border-gold-primary/20 bg-black/30 hover:border-gold-primary/50 hover:bg-gold-primary/10",
+                  )}
+                >
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-medium text-cream">{loc.name}</span>
+                    <span className="block truncate text-[11px] uppercase tracking-wider text-cream/45">
+                      {loc.region} · {loc.type}
+                    </span>
+                  </span>
+                  <span
+                    className={cn(
+                      "text-gold-primary transition-opacity",
+                      isSel ? "opacity-100" : "opacity-0 group-hover:opacity-100",
+                    )}
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      ) : (
+        <p className="rounded-xl border border-dashed border-gold-primary/25 bg-black/20 px-4 py-6 text-center text-xs leading-relaxed text-cream/45">
+          Nothing in the realm matches {`“${query.trim()}”`}. Try a castle, a city or a region —
+          or a place involved in the Dance.
+        </p>
+      )}
+    </div>
+  )
+}
+
 export function MapExplorer() {
   const searchParams = useSearchParams()
   const viewportRef = useRef<HTMLDivElement>(null)
@@ -74,6 +178,7 @@ export function MapExplorer() {
   const [zoom, setZoom] = useState(MIN_ZOOM)
   const [offset, setOffset] = useState<Offset>({ x: 0, y: 0 })
   const [dragging, setDragging] = useState(false)
+  const [query, setQuery] = useState("")
 
   const selected = selectedSlug ? locationBySlug(selectedSlug) : undefined
 
@@ -331,41 +436,16 @@ export function MapExplorer() {
           </div>
         </div>
 
-        {/* Side list of all ten locations */}
-        <div className="mt-4 grid gap-2 sm:grid-cols-2">
-          {locations.map((loc) => {
-            const isSel = loc.slug === selectedSlug
-            return (
-              <button
-                key={loc.slug}
-                type="button"
-                onClick={() => select(loc.slug, true)}
-                aria-pressed={isSel}
-                className={cn(
-                  "group flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition",
-                  isSel
-                    ? "border-gold-primary/70 bg-gold-primary/15"
-                    : "border-gold-primary/20 bg-black/30 hover:border-gold-primary/50 hover:bg-gold-primary/10",
-                )}
-              >
-                <span className="min-w-0">
-                  <span className="block truncate text-sm font-medium text-cream">{loc.name}</span>
-                  <span className="block truncate text-[11px] uppercase tracking-wider text-cream/45">
-                    {loc.region} · {loc.type}
-                  </span>
-                </span>
-                <span
-                  className={cn(
-                    "text-gold-primary transition-opacity",
-                    isSel ? "opacity-100" : "opacity-0 group-hover:opacity-100",
-                  )}
-                  aria-hidden="true"
-                >
-                  →
-                </span>
-              </button>
-            )
-          })}
+        {/* Searchable list of all ten locations — shown under the map on
+            compact screens; the desktop side panel hosts its own copy. */}
+        <div className="mt-4 lg:hidden">
+          <PlacesList
+            query={query}
+            onQueryChange={setQuery}
+            selectedSlug={selectedSlug}
+            onSelect={(slug) => select(slug, true)}
+            inputId="places-mobile"
+          />
         </div>
       </div>
 
@@ -498,14 +578,23 @@ export function MapExplorer() {
             </div>
           </div>
         ) : (
-          <div className="flex h-full min-h-[180px] flex-col items-center justify-center gap-3 p-8 text-center lg:min-h-[280px]">
-            <span className="text-2xl text-gold-primary" aria-hidden="true">
-              ✦
-            </span>
-            <p className="text-sm leading-relaxed text-cream/60">
-              Choose a marker on the map — or a place from the list — to read its story, its
-              people and the events that shaped the Dance.
-            </p>
+          <div className="hidden flex-col gap-4 p-4 lg:flex lg:min-h-[280px]">
+            <div className="text-center">
+              <span className="text-2xl text-gold-primary" aria-hidden="true">
+                ✦
+              </span>
+              <p className="mt-2 text-xs leading-relaxed text-cream/60">
+                Choose a marker on the map — or search the realm below — to read its story, its
+                people and the events that shaped the Dance.
+              </p>
+            </div>
+            <PlacesList
+              query={query}
+              onQueryChange={setQuery}
+              selectedSlug={selectedSlug}
+              onSelect={(slug) => select(slug, true)}
+              inputId="places-desktop"
+            />
           </div>
         )}
       </aside>
