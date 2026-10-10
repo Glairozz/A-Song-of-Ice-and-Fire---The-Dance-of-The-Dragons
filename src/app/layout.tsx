@@ -8,11 +8,11 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: {
-    default: "A Song of Ice and Fire — The Dance of the Dragons",
+    default: "A Song of Ice and Fire - Dance of the Dragons",
     template: "%s · The Dance of the Dragons",
   },
   description:
-    "An interactive archive of the Targaryen civil war known as the Dance of the Dragons — dragons, great houses, characters, locations, magic and a year-by-year timeline of the war.",
+    "Explore A Song of Ice and Fire - Dance of the Dragons, a fantasy experience inspired by the world of Westeros.",
   keywords: [
     "ASOIAF",
     "A Song of Ice and Fire",
