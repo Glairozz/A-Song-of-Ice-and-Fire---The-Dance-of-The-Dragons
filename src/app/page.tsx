@@ -12,6 +12,7 @@ import { characters, featuredCharacters } from "@/data/characters"
 import { houses, featuredHouses } from "@/data/houses"
 import { locations } from "@/data/locations"
 import { events } from "@/data/events"
+import { sectionIcons } from "@/lib/sectionIcons"
 
 /* Deterministic embers — same list on server and client. */
 const embers = Array.from({ length: 22 }, (_, i) => ({
@@ -24,15 +25,15 @@ const embers = Array.from({ length: 22 }, (_, i) => ({
 }))
 
 const realmLinks = [
-  { href: "/dragons", glyph: "🐉", label: "Dragons", note: `${dragons.length} beasts of flame` },
-  { href: "/characters", glyph: "⚔️", label: "Characters", note: `${characters.length} figures of the war` },
-  { href: "/greathouses", glyph: "🏰", label: "Great Houses", note: `${houses.length} bloodlines` },
-  { href: "/locations", glyph: "🗺️", label: "Locations", note: `${locations.length} seats of power` },
-  { href: "/map", glyph: "🧭", label: "Interactive Map", note: "Click through Westeros" },
-  { href: "/timeline", glyph: "📜", label: "Timeline", note: `${events.length} moments, 129–153 AC` },
-  { href: "/organizations", glyph: "🛡️", label: "Organizations", note: "Orders & councils" },
-  { href: "/magic", glyph: "✨", label: "Magic", note: "Fire, greensight, steel" },
-  { href: "/races", glyph: "🧬", label: "Races", note: "Men, giants & more" },
+  { href: "/dragons", icon: sectionIcons.dragons, label: "Dragons", note: `${dragons.length} beasts of flame` },
+  { href: "/characters", icon: sectionIcons.characters, label: "Characters", note: `${characters.length} figures of the war` },
+  { href: "/greathouses", icon: sectionIcons.houses, label: "Great Houses", note: `${houses.length} bloodlines` },
+  { href: "/locations", icon: sectionIcons.locations, label: "Locations", note: `${locations.length} seats of power` },
+  { href: "/map", icon: sectionIcons.map, label: "Interactive Map", note: "Click through Westeros" },
+  { href: "/timeline", icon: sectionIcons.timeline, label: "Timeline", note: `${events.length} moments, 129–153 AC` },
+  { href: "/organizations", icon: sectionIcons.organizations, label: "Organizations", note: "Orders & councils" },
+  { href: "/magic", icon: sectionIcons.magic, label: "Magic", note: "Fire, greensight, steel" },
+  { href: "/races", icon: sectionIcons.races, label: "Races", note: "Men, giants & more" },
 ]
 
 export default function Home() {
@@ -146,8 +147,14 @@ export default function Home() {
                 className="panel group flex h-full flex-col justify-between gap-3 p-4 md:p-5"
               >
                 <div className="flex items-start justify-between">
-                  <span className="text-2xl transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110 md:text-3xl">
-                    {item.glyph}
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-gold-primary/25 bg-black/40 p-1 transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110 md:h-14 md:w-14">
+                    <Image
+                      src={item.icon}
+                      alt=""
+                      width={56}
+                      height={56}
+                      className="h-full w-full rounded-md object-contain"
+                    />
                   </span>
                   <ChevronRight
                     size={16}

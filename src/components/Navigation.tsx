@@ -1,11 +1,13 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { AnimatePresence, motion } from "framer-motion"
-import { Menu, X, Search, ChevronDown, Map } from "lucide-react"
+import { Menu, X, Search, ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { sectionIcons } from "@/lib/sectionIcons"
 import { SearchOverlay } from "@/components/SearchOverlay"
 
 interface NavItem {
@@ -104,8 +106,14 @@ export function Navigation() {
               href="/"
               className="group flex items-center gap-2 text-gold-primary transition-colors hover:text-gold-light"
             >
-              <span className="text-xl" aria-hidden>
-                🐉
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-gold-primary/30 bg-black/40 p-0.5" aria-hidden>
+                <Image
+                  src={sectionIcons.dragons}
+                  alt=""
+                  width={32}
+                  height={32}
+                  className="h-full w-full rounded-md object-contain"
+                />
               </span>
               <span className="leading-none">
                 <span className="block font-[family-name:var(--font-display)] text-sm font-bold tracking-[0.18em] md:text-base">
@@ -178,7 +186,15 @@ export function Navigation() {
                             )}
                           >
                             {item.label}
-                            {item.href === "/map" && <Map size={13} />}
+                            {item.href === "/map" && (
+                              <Image
+                                src={sectionIcons.map}
+                                alt=""
+                                width={20}
+                                height={20}
+                                className="h-5 w-5 shrink-0 rounded object-contain"
+                              />
+                            )}
                           </Link>
                         ))}
                       </div>
